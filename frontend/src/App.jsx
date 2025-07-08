@@ -1,11 +1,18 @@
-import './App.css'
-
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Authform from "./components/AuthForm";
 function App() {
   return (
-    <div className='min-h-screen w-full bg-slate-800 text-white text-shadow-amber-300 flex items-center justify-center'>
-      <h1 className='tracking-tight font-extrabold underline'>Working fine!</h1>
-    </div>
-  ) 
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<Authform />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
