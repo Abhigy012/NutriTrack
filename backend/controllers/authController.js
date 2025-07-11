@@ -1,63 +1,51 @@
-const express = require("express");
-const app = express();
-const dotenv = require("dotenv");
-dotenv.config();
-const port = process.env.PORT;
-const cookieparser = require("cookie-parser");
-const userModel = require("../models/user");
-const cors = require("cors");
 const bcrypt = require("bcrypt");
+const userModel = require("../models/user");
 const { generateToken } = require("../middlewares/generateToken");
 
-app.use(cookieparser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+const signupUser = async (req, res) => {
+  const { email, password, name, height, weight, age, gender, goal, activity } = req.body;
 
-app.post("/signup",  async (req, res) => {
-  let { email, password, name, height, weight, age, gender, goal, activity } =
-    req.body;
-  let user = await userModel.findOne({ email });
-  if (user) {
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) {
     return res.status(409).json({ error: "Email is already taken" });
-  } else {
-    bcrypt.hash(password, 10, async function (err, hash) {
-      if (err) {
-        console.log(err.message);
-        return res.status(500).send("Error hashing password");
-      }
-
-      try {
-        let user = await userModel.create({
-          email,
-          name,
-          password: hash,
-          name,
-          height,
-          weight,
-          age,
-          gender,
-          goal,
-          activityLevel: activity,
-        });
-
-        console.log("User created successfully");
-        let token = generateToken(user.email);
-        res.cookie("token", token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "None",
-          maxAge: 24 * 60 * 60 * 1000,
-        });
-        res.status(200).json({ message: "User created successsfully" });
-      } catch (dbError) {
-        console.log(dbError.message);
-        return res.status(500).send("Error creating user");
-      }
-    });
   }
-});
 
-app.post("/login", async (req, res) => {
+  bcrypt.hash(password, 10, async (err, hash) => {
+    if (err) {
+      console.error(err.message);
+      return res.status(500).send("Error hashing password");
+    }
+
+    try {
+      const newUser = await userModel.create({
+        email,
+        password: hash,
+        name,
+        height,
+        weight,
+        age,
+        gender,
+        goal,
+        activityLevel: activity,
+      });
+
+      const token = generateToken(newUser._id);
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
+        maxAge: 24 * 60 * 60 * 1000,
+      });
+
+      res.status(200).json({ message: "User created successfully" });
+    } catch (dbError) {
+      console.error(dbError.message);
+      res.status(500).send("Error creating user");
+    }
+  });
+};
+
+const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -71,7 +59,7 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    const token = generateToken(user.email);
+    const token = generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -84,7 +72,6 @@ app.post("/login", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
-});
+};
 
-
-module.exports = app;
+module.exports = { signupUser, loginUser };
