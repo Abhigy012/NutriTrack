@@ -7,14 +7,23 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaChartColumn } from "react-icons/fa6";
 import { FcPaid } from "react-icons/fc";
+import { Link } from "react-router-dom";
 
 const menuItems = [
-  { icons: <IoHomeOutline size={30} />, label: "Home" },
-  { icons: <MdOutlineDashboard size={30} />, label: "Dashboard" },
-  { icons: <IoFastFoodSharp size={30} />, label: "Food Log" },
-  { icons: <TbReportSearch size={30} />, label: "Reports" },
-  { icons: <FaChartColumn size={30} />, label: "Summary" },
-  { icons: <FcPaid size={30} />, label: "Pro" },
+  { icon: <IoHomeOutline size={30} />, label: "Home", path: "/" },
+  {
+    icon: <MdOutlineDashboard size={30} />,
+    label: "Dashboard",
+    path: "/dashboard",
+  },
+  {
+    icon: <IoFastFoodSharp size={30} />,
+    label: "Food Log",
+    path: "/dashboard/foodlog",
+  },
+  { icon: <TbReportSearch size={30} />, label: "Reports", path: "/reports" },
+  { icon: <FaChartColumn size={30} />, label: "Summary", path: "/summary" },
+  { icon: <FcPaid size={30} />, label: "Pro", path: "/pro" },
 ];
 
 export default function Sidebar({ open, toggleSidebar }) {
@@ -40,17 +49,20 @@ export default function Sidebar({ open, toggleSidebar }) {
             key={index}
             className="px-3 py-2 my-2 hover:bg-slate-200 rounded-md duration-300 cursor-pointer flex items-center gap-3 relative group"
           >
-            {/* Icon */}
-            <div className="min-w-[30px]">{item.icons}</div>
+            {/* Wrap each item in a Link for routing */}
+            <Link to={item.path} className="flex items-center gap-3 w-full">
+              {/* Icon */}
+              <div className="min-w-[30px]">{item.icon}</div>
 
-            {/* Label (Visible when open) */}
-            <p
-              className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${
-                open ? "opacity-100 w-auto" : "opacity-0 w-0"
-              }`}
-            >
-              {item.label}
-            </p>
+              {/* Label (Visible when open) */}
+              <p
+                className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${
+                  open ? "opacity-100 w-auto" : "opacity-0 w-0"
+                }`}
+              >
+                {item.label}
+              </p>
+            </Link>
 
             {/* Tooltip on hover when closed */}
             {!open && (

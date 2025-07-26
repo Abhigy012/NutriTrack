@@ -3,17 +3,28 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Authform from "./components/AuthForm";
+import UserDashboard from "./pages/UserDashboard";
 import FoodLog from "./components/FoodLog";
+
+// 👇 Import the UserProvider
+import { UserProvider } from "../src/contexts/UserContext"; // adjust the path if needed
+
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/auth" element={<Authform />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/foodlog" element={<FoodLog />} />
-      </Routes>
-    </BrowserRouter>
+    <UserProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/auth" element={<Authform />} />
+
+          {/* Dashboard with nested routes */}
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route index element={<UserDashboard />} />
+            <Route path="foodlog" element={<FoodLog />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </UserProvider>
   );
 }
 

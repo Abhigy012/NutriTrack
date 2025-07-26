@@ -1,10 +1,8 @@
 import { React, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
 const url = import.meta.env.VITE_API_URL;
 
-function FoodlogForm() {
-  const navigate = useNavigate();
+function FoodlogForm({ fetchFoodLog}) {
   let [error, setError] = useState("");
   const {
     register,
@@ -29,7 +27,7 @@ function FoodlogForm() {
         console.log("Success:", result.message);
         reset();
         setError("");
-        navigate("/foodLog");
+        fetchFoodLog();
       } else {
         setError(result.error || "Unknown error occurred");
         console.error("FoodLog error:", result.error);
@@ -42,13 +40,53 @@ function FoodlogForm() {
   return (
     <div id="foodlogform">
       {error && (
-        <p className="bg-red-200 text-red-600 text-center p-2 rounded-md">
+        <p className={`bg-red-200 text-red-600 text-center p-2 rounded-md `}>
           {error}
         </p>
       )}
-      <h1 className="text-center font-bold text-4xl text-black">
-        Log new Food!
-      </h1>
+
+      <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
+        <h1 className="text-center font-bold text-4xl text-black">
+          Log new Food!
+        </h1>
+        <label className="flex gap-1 justify-between items-center">
+          Food :
+          <input
+            className={`bg-white p-2 border-1 text-black rounded-md ${
+              errors.foodName
+                ? "border-red-500 shadow shadow-red-300"
+                : "border-gray-300"
+            }`}
+            type="text"
+            placeholder="why"
+            {...register("foodName", {
+              required: true,
+            })}
+          />
+        </label>
+
+        <label className="flex gap-1 justify-between items-center">
+          Quantity :
+          <input
+            className={`bg-white p-2 border-1 text-black rounded-md ${
+              errors.quantity
+                ? "border-red-500 shadow shadow-red-300"
+                : "border-gray-300"
+            }`}
+            type="number"
+            placeholder="x grams"
+            {...register("quantity", {
+              required: true,
+            })}
+          />
+        </label>
+        <button
+          type="submit"
+          className="bg-blue-500 cursor-pointer hover:bg-blue-600 transition-all rounded-md p-3 text-white tracking-tighter"
+        >
+          Submit
+        </button>
+      </form>
     </div>
   );
 }
