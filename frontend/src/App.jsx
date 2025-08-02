@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
-import Authform from "./components/AuthForm";
+import Authform from "./pages/Authform";
 import UserDashboard from "./pages/UserDashboard";
 import FoodLog from "./components/FoodLog";
 
@@ -15,7 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<Authform />} />
+          <Route path="/auth/*" element={<Authform />} />
 
           {/* Dashboard with nested routes */}
           <Route path="/dashboard" element={<Dashboard />}>

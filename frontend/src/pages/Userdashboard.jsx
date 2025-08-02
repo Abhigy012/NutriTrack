@@ -9,9 +9,7 @@ const UserDashboard = () => {
   if (!user) {
     return <p>You are not Logged in!</p>;
   }
-  return (<h1>
-    Welcome , 
-  </h1>)
+  return <h1>Welcome , {user.name}</h1>;
 };
 
 export default UserDashboard;

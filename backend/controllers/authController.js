@@ -3,8 +3,8 @@ const userModel = require("../models/user");
 const { generateToken } = require("../middlewares/generateToken");
 
 const signupUser = async (req, res) => {
-  const { email, password, name, height, weight, age, gender, goal, activity } = req.body;
-
+  const { email, password, name, height, weight, age, gender, goal, activity } =
+    req.body;
   const existingUser = await userModel.findOne({ email });
   if (existingUser) {
     return res.status(409).json({ error: "Email is already taken" });
@@ -74,4 +74,17 @@ const loginUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser };
+const fetchUser = async (req, res) => {
+  if (req.user._id) {
+    let user = await userModel.findById(req.user._id);
+    if (user) {
+      res.status(200).json({ message: "User fetched successfully!", user });
+    } else {
+      res.status(400).json({ message: "User not found!" });
+    }
+  } else {
+    return res.status(300).json({ message: "User not logged in!" });
+  }
+};
+
+module.exports = { signupUser, loginUser, fetchUser };

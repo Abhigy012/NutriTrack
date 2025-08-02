@@ -1,10 +1,14 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useUser from "../contexts/UserContext";
+
 const url = import.meta.env.VITE_API_URL;
 function Login() {
-  let navigate = useNavigate();
+  let { fetchUser } = useUser();
+  const navigate = useNavigate();
   let [error, setError] = useState("");
+
   const {
     register,
     handleSubmit,
@@ -28,7 +32,8 @@ function Login() {
         console.log("Success:", result.message);
         reset();
         setError("");
-        navigate("/dashboard");
+        await fetchUser();
+        navigate("/dashboard", { replace: true });
       } else {
         setError(result.error || "Unknown error occurred");
         console.error("Login error:", result.error);

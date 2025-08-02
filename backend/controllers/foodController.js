@@ -7,11 +7,7 @@ const addFoodLog = async (req, res) => {
       timestamp: Date.now(),
       quantity,
       foodName,
-      macros: {
-        protein: 30,
-        carbs: 100,
-        fats: 50,
-      },
+      
       user: req.user._id,
     });
     if (!newFood) {
