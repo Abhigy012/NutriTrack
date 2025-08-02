@@ -19,8 +19,10 @@ const FoodLog = () => {
         setFoodLog(responseData);
       } else {
         setError("Unable to fetch the food log.");
+        setFoodLog(null);
       }
     } catch (error) {
+      setFoodLog(null);
       setError(error.message);
     }
   };

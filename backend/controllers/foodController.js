@@ -1,13 +1,21 @@
 const foodModel = require("../models/food");
-
+const { getMacros } = require("../utils/getMacros");
 const addFoodLog = async (req, res) => {
-  let { quantity, foodName } = req.body;
+  let { quantity, foodName, foodRecipe } = req.body;
   try {
+    let response = await getMacros(foodName, quantity, foodRecipe);
+    if (!response) {
+      return res.status(300).json({ error: "macros not fetched!" });
+    }
     let newFood = await foodModel.create({
       timestamp: Date.now(),
-      quantity,
+      quantity: response.quantity,
       foodName,
-      
+      macros: {
+        proteins: response.proteins,
+        carbs: response.carbs,
+        fats: response.fats,
+      },
       user: req.user._id,
     });
     if (!newFood) {
@@ -35,7 +43,6 @@ const getTodayFoodLogs = async (req, res) => {
       timestamp: { $gte: startMillis, $lte: endMillis },
     });
     if (userFoods) {
-      console.log(userFoods);
       res.status(200).send(userFoods);
     } else {
       res.status(400).json({ message: "food not logged" });

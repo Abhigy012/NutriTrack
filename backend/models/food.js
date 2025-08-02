@@ -5,7 +5,7 @@ const foodSchema = new mongoose.Schema({
   timestamp: Date,
   quantity: Number,
   foodName: String,
-  macros: { protein: Number, carbs: Number, fats: Number },
+  macros: {},
 });
 
 module.exports = mongoose.model("food", foodSchema);

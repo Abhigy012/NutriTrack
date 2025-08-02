@@ -8,6 +8,7 @@ import FoodLog from "./components/FoodLog";
 
 // 👇 Import the UserProvider
 import { UserProvider } from "../src/contexts/UserContext"; // adjust the path if needed
+import Loading from "./components/Loading";
 
 function App() {
   return (

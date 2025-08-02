@@ -2,7 +2,7 @@ import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet, redirect } from "react-router-dom";
 import useUser from "../contexts/UserContext";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 import { Navigate } from "react-router-dom";
 
 const Dashboard = () => {

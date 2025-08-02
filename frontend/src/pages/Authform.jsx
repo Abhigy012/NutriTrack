@@ -1,7 +1,7 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import useUser from "../contexts/UserContext";
 import AuthPage from "./AuthPage";
-import Loading from "./Loading";
+import Loading from "../components/Loading";
 function Authform() {
   let navigate = useNavigate();
   let { user, loading } = useUser();

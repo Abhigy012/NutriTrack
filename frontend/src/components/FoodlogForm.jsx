@@ -1,8 +1,10 @@
 import { React, useState } from "react";
 import { useForm } from "react-hook-form";
+import Loading from "./Loading";
 const url = import.meta.env.VITE_API_URL;
 
-function FoodlogForm({ fetchFoodLog}) {
+function FoodlogForm({ fetchFoodLog }) {
+  let [loading, setLoading] = useState(false);
   let [error, setError] = useState("");
   const {
     register,
@@ -12,6 +14,7 @@ function FoodlogForm({ fetchFoodLog}) {
   } = useForm();
 
   const onSubmit = async (data) => {
+    setLoading((prev) => !prev);
     let JSONdata = JSON.stringify(data);
     try {
       let response = await fetch(`${url}/food/addFoodLog`, {
@@ -35,10 +38,12 @@ function FoodlogForm({ fetchFoodLog}) {
     } catch (err) {
       setError("Network error or server unavailable");
       console.error("Fetch error:", err);
+    } finally {
+      setLoading((prev) => !prev);
     }
   };
   return (
-    <div id="foodlogform">
+    <div id="foodlogform" className="flex flex-col gap-2 items-center">
       {error && (
         <p className={`bg-red-200 text-red-600 text-center p-2 rounded-md `}>
           {error}
@@ -58,7 +63,7 @@ function FoodlogForm({ fetchFoodLog}) {
                 : "border-gray-300"
             }`}
             type="text"
-            placeholder="why"
+            placeholder="Food Name"
             {...register("foodName", {
               required: true,
             })}
@@ -74,10 +79,23 @@ function FoodlogForm({ fetchFoodLog}) {
                 : "border-gray-300"
             }`}
             type="number"
-            placeholder="x grams"
+            placeholder="0 to fetch"
             {...register("quantity", {
               required: true,
             })}
+          />
+        </label>
+        <label className="flex gap-1 justify-between items-center">
+          Food recipe :
+          <input
+            className={`bg-white p-2 border-1 text-black rounded-md ${
+              errors.foodRecipe
+                ? "border-red-500 shadow shadow-red-300"
+                : "border-gray-300"
+            }`}
+            type="text"
+            placeholder="Recipe"
+            {...register("foodRecipe")}
           />
         </label>
         <button
@@ -87,6 +105,16 @@ function FoodlogForm({ fetchFoodLog}) {
           Submit
         </button>
       </form>
+      {loading ? (
+        <div className="block h-20 w-20">
+          <img
+            src="/images/Loading.gif"
+            className="h-full w-full"
+            alt="awdaw"
+          />
+        </div>
+      ) : null}
+      {}
     </div>
   );
 }
