@@ -1,28 +1,33 @@
+// src/pages/Dashboard.jsx
 import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import { Outlet, redirect } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import useUser from "../contexts/UserContext";
 import Loading from "../components/Loading";
-import { Navigate } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
 
 const Dashboard = () => {
-  let { user, loading } = useUser();
-  const [open, setOpen] = useState(false);
-  if (loading) {
-    return <Loading />;
-  }
-  if (!user) {
-    return <Navigate to="/auth" replace />;
-  }
-  return (
-    <div className="flex min-h-screen bg-slate-100 text-black transition-all duration-300">
-      {/* Sidebar (common across all child routes) */}
-      <Sidebar open={open} toggleSidebar={() => setOpen(!open)} />
+  const { user, loading, logout } = useUser();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col p-6 ml-[60px]">
-        {/* This is where child routes will render */}
-        <Outlet />
+  if (loading) return <Loading />;
+  if (!user) return <Navigate to="/auth" replace />;
+
+  return (
+    <div className="min-h-screen flex bg-slate-100 text-black">
+      <Sidebar user={user} logout={logout} />
+      <div className="flex-1 flex flex-col">
+        <Header
+          toggleSidebar={() => setMobileOpen((s) => !s)}
+          mobileOpen={mobileOpen}
+          setMobileOpen={setMobileOpen}
+          user={user}
+          logout={logout}
+        />
+
+        <main className="flex-1 p-4 md:p-6 md:ml-64 mt-16">
+          <Outlet />
+        </main>
       </div>
     </div>
   );

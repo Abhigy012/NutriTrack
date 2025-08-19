@@ -1,9 +1,11 @@
 import { React, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import useUser from "../contexts/UserContext";
 const url = import.meta.env.VITE_API_URL;
 function Signup() {
   const navigate = useNavigate();
+  let { fetchUser } = useUser();
   let [error, setError] = useState("");
   const {
     register,
@@ -28,7 +30,8 @@ function Signup() {
         console.log("Success:", result.message);
         reset();
         setError("");
-        navigate("/dashboard");
+        await fetchUser();
+        navigate("/dashboard", { replace: true });
       } else {
         setError(result.error || "Unknown error occurred");
         console.error("Signup error:", result.error);

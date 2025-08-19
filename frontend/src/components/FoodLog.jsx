@@ -27,37 +27,43 @@ const FoodLog = () => {
     }
   };
 
+  const handleDeleted = (id) => {
+    setFoodLog((prev) => (prev || []).filter((f) => f._id !== id));
+  };
+
   useEffect(() => {
     fetchFoodLog();
   }, []);
 
   return (
-    <div className="flex flex-col w-full min-h-screen gap-4 bg-slate-300 p-5">
-      <div className="flex-grow flex gap-3 rounded-lg">
+    <div className="flex flex-col w-full min-h-screen gap-4 bg-slate-100 p-5">
+      <div className="flex-grow flex flex-col gap-3 rounded-lg lg:flex-row">
+        {/* Food logs */}
         <div
           id="todayfoodlogs"
-          className="flex flex-col justify-center gap-3 p-3 w-3/4 bg-white rounded-lg"
+          className="flex flex-col gap-3 p-4 w-full bg-white rounded-lg shadow lg:w-3/4"
         >
           {error && (
-            <p className={`bg-red-200 text-red-600 text-center p-2 rounded-md`}>
+            <p className="bg-red-200 text-red-600 text-center p-2 rounded-md">
               {error}
             </p>
           )}
-          <h1 className="text-center font-bold text-xl">Today's Food Log</h1>
-          <FoodlogTable foodLog={foodLog} />
+          <h1 className="text-left font-bold text-xl">Today's Food Log</h1>
+          <FoodlogTable foodLog={foodLog} onDeleted={handleDeleted} />
         </div>
-        <FoodlogForm
-          fetchFoodLog={fetchFoodLog}
-          setFoodLog={setFoodLog}
-          id="foodlogform"
-          className="w-1/4 bg-blue-300 rounded-lg"
-        />
+
+        {/* Food log form */}
+        <div className="w-full lg:w-1/4">
+          <FoodlogForm
+            fetchFoodLog={fetchFoodLog}
+            setFoodLog={setFoodLog}
+            id="foodlogform"
+          />
+        </div>
       </div>
 
-      <div
-        id="daywisefoodlogs"
-        className="h-64 w-full rounded-lg bg-red-400"
-      ></div>
+      {/* Future daywise logs */}
+      <div id="daywisefoodlogs" className="hidden"></div>
     </div>
   );
 };

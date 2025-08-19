@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import Loading from "./Loading";
 const url = import.meta.env.VITE_API_URL;
 
-function FoodlogForm({ fetchFoodLog }) {
+function FoodlogForm({ fetchFoodLog, fetchNutrition }) {
   let [loading, setLoading] = useState(false);
   let [error, setError] = useState("");
   const {
@@ -30,28 +30,32 @@ function FoodlogForm({ fetchFoodLog }) {
         console.log("Success:", result.message);
         reset();
         setError("");
-        fetchFoodLog();
+        if (fetchFoodLog) fetchFoodLog();
+        if (fetchNutrition) fetchNutrition();
+        if (result.alerts && result.alerts.length) {
+          alert(`Avoid alert: ${result.alerts.join(", ")}`);
+        }
       } else {
         setError(result.error || "Unknown error occurred");
         console.error("FoodLog error:", result.error);
       }
     } catch (err) {
       setError("Network error or server unavailable");
-      console.error("Fetch error:", err);
+      console.error("Fetch error:", err.message);
     } finally {
       setLoading((prev) => !prev);
     }
   };
   return (
-    <div id="foodlogform" className="flex flex-col gap-2 items-center">
+    <div id="foodlogform" className="flex flex-col gap-2 items-center bg-blue-50 p-4 rounded-lg shadow">
       {error && (
         <p className={`bg-red-200 text-red-600 text-center p-2 rounded-md `}>
           {error}
         </p>
       )}
 
-      <form className="flex flex-col gap-2" onSubmit={handleSubmit(onSubmit)}>
-        <h1 className="text-center font-bold text-4xl text-black">
+      <form className="flex flex-col gap-2 w-full max-w-md" onSubmit={handleSubmit(onSubmit)}>
+        <h1 className="text-center font-bold tracking-tighter text-2xl text-black">
           Log new Food!
         </h1>
         <label className="flex gap-1 justify-between items-center">
@@ -100,7 +104,7 @@ function FoodlogForm({ fetchFoodLog }) {
         </label>
         <button
           type="submit"
-          className="bg-blue-500 cursor-pointer hover:bg-blue-600 transition-all rounded-md p-3 text-white tracking-tighter"
+          className="bg-blue-500 cursor-pointer hover:bg-blue-600 transition-all rounded-md p-3 text-white tracking-tighter shadow"
         >
           Submit
         </button>

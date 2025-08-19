@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const userModel = require("../models/user");
+const { getRequiredDiet } = require("../utils/getRequiredDiet");
 const { generateToken } = require("../middlewares/generateToken");
 
 const signupUser = async (req, res) => {
@@ -17,6 +18,7 @@ const signupUser = async (req, res) => {
     }
 
     try {
+      // Create user first without waiting for AI diet to finish
       const newUser = await userModel.create({
         email,
         password: hash,
@@ -27,17 +29,39 @@ const signupUser = async (req, res) => {
         gender,
         goal,
         activityLevel: activity,
+        // diet will be computed asynchronously after signup
       });
 
       const token = generateToken(newUser._id);
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true,
-        sameSite: "None",
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
         maxAge: 24 * 60 * 60 * 1000,
       });
+      // Respond immediately; compute diet in background
+      res.status(200).json({ message: "User created successfully. Setting up your plan..." });
 
-      res.status(200).json({ message: "User created successfully" });
+      // Fire-and-forget: compute required diet and update user
+      setImmediate(async () => {
+        try {
+          const response = await getRequiredDiet(
+            height,
+            weight,
+            activity,
+            goal,
+            age
+          );
+          if (response) {
+            const { reqCal, reqCarbs, reqProteins, reqFats } = response;
+            await userModel.findByIdAndUpdate(newUser._id, {
+              diet: { reqCal, reqCarbs, reqProteins, reqFats },
+            });
+          }
+        } catch (bgErr) {
+          console.error("diet background compute error:", bgErr.message);
+        }
+      });
     } catch (dbError) {
       console.error(dbError.message);
       res.status(500).send("Error creating user");
@@ -62,8 +86,8 @@ const loginUser = async (req, res) => {
     const token = generateToken(user._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
-      sameSite: "None",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -87,4 +111,46 @@ const fetchUser = async (req, res) => {
   }
 };
 
-module.exports = { signupUser, loginUser, fetchUser };
+const logoutUser = (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+  });
+  return res.status(200).json({ message: "Logged out successfully" });
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const { name, height, weight, age, goal, activityLevel } = req.body;
+    const update = {};
+    if (name != null) update.name = name;
+    if (height != null) update.height = Number(height);
+    if (weight != null) update.weight = Number(weight);
+    if (age != null) update.age = Number(age);
+    if (goal) update.goal = goal;
+    if (activityLevel) update.activityLevel = activityLevel;
+    const user = await userModel.findByIdAndUpdate(req.user._id, update, { new: true });
+    return res.json({ message: "Profile updated", user });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+const changePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) return res.status(400).json({ error: "Missing fields" });
+    const user = await userModel.findById(req.user._id);
+    const ok = await bcrypt.compare(oldPassword, user.password);
+    if (!ok) return res.status(401).json({ error: "Old password incorrect" });
+    const hash = await bcrypt.hash(newPassword, 10);
+    user.password = hash;
+    await user.save();
+    return res.json({ message: "Password changed" });
+  } catch (err) {
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { signupUser, loginUser, fetchUser, logoutUser, updateProfile, changePassword };

@@ -1,93 +1,87 @@
+// src/components/Sidebar.jsx
 import React from "react";
-import { MdMenuOpen } from "react-icons/md";
-import { IoHomeOutline } from "react-icons/io5";
-import { FaUserCircle } from "react-icons/fa";
-import { TbReportSearch } from "react-icons/tb";
+import { Link, useNavigate } from "react-router-dom";
+import { IoHomeOutline, IoFastFoodSharp } from "react-icons/io5";
 import { MdOutlineDashboard } from "react-icons/md";
-import { IoFastFoodSharp } from "react-icons/io5";
-import { FaChartColumn } from "react-icons/fa6";
-import { FcPaid } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { TbReportSearch } from "react-icons/tb";
+import { FaUserCircle } from "react-icons/fa";
 
 const menuItems = [
-  { icon: <IoHomeOutline size={30} />, label: "Home", path: "/" },
+  { icon: <IoHomeOutline size={18} />, label: "Home", path: "/" },
   {
-    icon: <MdOutlineDashboard size={30} />,
+    icon: <MdOutlineDashboard size={18} />,
     label: "Dashboard",
     path: "/dashboard",
   },
   {
-    icon: <IoFastFoodSharp size={30} />,
+    icon: <IoFastFoodSharp size={18} />,
     label: "Food Log",
     path: "/dashboard/foodlog",
   },
-  { icon: <TbReportSearch size={30} />, label: "Reports", path: "/reports" },
-  { icon: <FaChartColumn size={30} />, label: "Summary", path: "/summary" },
-  { icon: <FcPaid size={30} />, label: "Pro", path: "/pro" },
+  {
+    icon: <TbReportSearch size={18} />,
+    label: "Reports",
+    path: "/dashboard/reports",
+  },
 ];
 
-export default function Sidebar({ open, toggleSidebar }) {
+export default function Sidebar({ user = { name: "User" }, logout }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      if (logout) await logout();
+    } catch (e) {
+      console.log(e.message);
+    }
+    navigate("/auth", { replace: true });
+  };
+
   return (
-    <nav
-      className={`fixed top-0 left-0 h-screen p-2 flex flex-col duration-300 bg-white text-black z-50 ${
-        open ? "w-60" : "w-16"
-      }`}
-    >
-      {/* Top Toggle Button */}
-      <div className="px-3 py-2 h-20 flex justify-between items-center">
-        <MdMenuOpen
-          size={34}
-          className={`duration-500 cursor-pointer ${!open && "rotate-180"}`}
-          onClick={toggleSidebar}
-        />
-      </div>
+    <>
+      {/* Desktop sidebar only */}
+      <nav className="hidden md:fixed md:inset-y-0 md:left-0 md:w-64 md:flex md:flex-col bg-white border-r z-30">
+        <div className="h-16 flex items-center px-4 shadow-sm gap-3">
+          <img src="/images/Logo.png" alt="NutriTrack logo" className="h-8 w-auto" />
+          <h1 className="text-xl font-semibold">NutriTrack</h1>
+        </div>
 
-      {/* Menu Items */}
-      <ul className="flex-1">
-        {menuItems.map((item, index) => (
-          <li
-            key={index}
-            className="px-3 py-2 my-2 hover:bg-slate-200 rounded-md duration-300 cursor-pointer flex items-center gap-3 relative group"
+        <div className="flex-1 overflow-y-auto p-4">
+          <ul className="flex flex-col gap-1">
+            {menuItems.map((it, idx) => (
+              <li key={idx}>
+                <Link
+                  to={it.path}
+                  className="flex items-center gap-3 p-2 rounded hover:bg-slate-100"
+                >
+                  <div className="w-6">{it.icon}</div>
+                  <span>{it.label}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="p-4 border-t flex items-center justify-between">
+          <div
+            className="flex items-center gap-3 cursor-pointer flex-1 hover:bg-slate-100 rounded-md"
+            onClick={() => navigate("/dashboard/profile")}
           >
-            {/* Wrap each item in a Link for routing */}
-            <Link to={item.path} className="flex items-center gap-3 w-full">
-              {/* Icon */}
-              <div className="min-w-[30px]">{item.icon}</div>
+            <FaUserCircle size={26} className="text-slate-700" />
+            <div className="flex flex-col">
+              <span className="font-medium">{user?.name || "User"}</span>
+              <span className="text-xs text-slate-500">Member</span>
+            </div>
+          </div>
 
-              {/* Label (Visible when open) */}
-              <p
-                className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${
-                  open ? "opacity-100 w-auto" : "opacity-0 w-0"
-                }`}
-              >
-                {item.label}
-              </p>
-            </Link>
-
-            {/* Tooltip on hover when closed */}
-            {!open && (
-              <span className="absolute left-16 z-10 bg-white text-black text-sm whitespace-nowrap rounded-md shadow-md px-2 py-1 opacity-0 group-hover:opacity-100 group-hover:delay-100 transition-all duration-300">
-                {item.label}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-
-      {/* User Info */}
-      <div className="flex items-center gap-3 px-3 py-2">
-        <div className="min-w-[30px] flex justify-center items-center">
-          <FaUserCircle size={30} />
+          <button
+            onClick={handleLogout}
+            className="px-3 py-1 rounded-md bg-red-500 text-white text-sm font-medium hover:bg-red-400"
+          >
+            Logout
+          </button>
         </div>
-        <div
-          className={`transition-all duration-300 whitespace-nowrap overflow-hidden ${
-            open ? "opacity-100 w-auto" : "opacity-0 w-0"
-          }`}
-        >
-          <p>Saheb</p>
-          <span className="text-xs">saheb@gmail.com</span>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 }

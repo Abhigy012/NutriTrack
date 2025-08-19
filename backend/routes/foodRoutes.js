@@ -6,6 +6,7 @@ const {
   addFoodLog,
   getTodayFoodLogs,
   deleteFoodLog,
+  getTodayNutrition,
 } = require("../controllers/foodController");
 
 router.get("/dashboard", authMiddleware, async (req, res) => {
@@ -18,5 +19,6 @@ router.get("/dashboard", authMiddleware, async (req, res) => {
 
 router.post("/addFoodLog", authMiddleware, addFoodLog);
 router.get("/getTodayFoodLogs", authMiddleware, getTodayFoodLogs);
+router.post("/getTodayNutrition", authMiddleware, getTodayNutrition);
 router.post("/deleteFoodLog", authMiddleware, deleteFoodLog);
 module.exports = router;

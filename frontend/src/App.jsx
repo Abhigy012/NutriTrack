@@ -5,6 +5,8 @@ import Dashboard from "./pages/Dashboard";
 import Authform from "./pages/Authform";
 import UserDashboard from "./pages/UserDashboard";
 import FoodLog from "./components/FoodLog";
+import Reports from "./pages/Reports";
+import Profile from "./pages/Profile";
 
 // 👇 Import the UserProvider
 import { UserProvider } from "../src/contexts/UserContext"; // adjust the path if needed
@@ -22,6 +24,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />}>
             <Route index element={<UserDashboard />} />
             <Route path="foodlog" element={<FoodLog />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </BrowserRouter>
