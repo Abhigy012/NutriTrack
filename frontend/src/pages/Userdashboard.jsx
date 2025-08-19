@@ -111,7 +111,7 @@ const UserDashboard = () => {
           </div>
         )}
       </div>
-
+      {/**/}
       <div>
         <FoodlogForm fetchNutrition={() => fetchNutrition(date)} />
       </div>
