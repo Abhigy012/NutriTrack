@@ -22,12 +22,21 @@ const UserDashboard = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ date: forDate })
+        body: JSON.stringify({ date: forDate }),
       });
       const data = await res.json();
       setNutrition(data);
       // Also upsert the daily summary for this date (MVP)
-      try { await fetch(`${url}/summary/daily`, { method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include", body: JSON.stringify({ date: forDate }) }); } catch (_) {}
+      try {
+        await fetch(`${url}/summary/daily`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ date: forDate }),
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
     } catch (err) {
       console.error("fetchNutrition error:", err);
     }
@@ -55,7 +64,9 @@ const UserDashboard = () => {
       tries += 1;
       try {
         await fetchUser();
-      } catch (_) {}
+      } catch (e) {
+        console.log(e.message);
+      }
       if (user?.diet && (user.diet.reqCal || 0) > 0) {
         clearInterval(id);
       }
@@ -80,7 +91,9 @@ const UserDashboard = () => {
           />
         </div>
         <div className="text-sm text-gray-600">
-          Required: {user?.diet?.reqCal || 0} kcal | P {user?.diet?.reqProteins || 0}g, F {user?.diet?.reqFats || 0}g, C {user?.diet?.reqCarbs || 0}g
+          Required: {user?.diet?.reqCal || 0} kcal | P{" "}
+          {user?.diet?.reqProteins || 0}g, F {user?.diet?.reqFats || 0}g, C{" "}
+          {user?.diet?.reqCarbs || 0}g
         </div>
       </div>
 
@@ -90,7 +103,11 @@ const UserDashboard = () => {
           <DietPie nutrition={nutrition} required={user?.diet} />
         ) : (
           <div className="flex items-center justify-center h-48">
-            <img src="/images/Loading.gif" alt="Loading" className="h-12 w-12" />
+            <img
+              src="/images/Loading.gif"
+              alt="Loading"
+              className="h-12 w-12"
+            />
           </div>
         )}
       </div>
