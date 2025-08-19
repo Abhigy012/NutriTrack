@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import useUser from "../contexts/UserContext";
+import useUser from "../contexts/UserContext.jsx";
 
 const url = import.meta.env.VITE_API_URL;
 function Login() {

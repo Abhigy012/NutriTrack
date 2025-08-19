@@ -1,4 +1,4 @@
-import Loading from "./Loading";
+import Loading from "./Loading.jsx";
 
 export default function DailyNutrition({ nutrition }) {
   if (!nutrition) return <Loading />;

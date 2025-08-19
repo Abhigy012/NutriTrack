@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import FoodlogForm from "../components/FoodlogForm";
-import FoodlogTable from "./FoodlogTable";
+import FoodlogForm from "../components/FoodlogForm.jsx";
+import FoodlogTable from "./FoodlogTable.jsx";
 const url = import.meta.env.VITE_API_URL;
 
 const FoodLog = () => {

@@ -1,10 +1,10 @@
 // src/pages/Dashboard.jsx
 import { useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
-import useUser from "../contexts/UserContext";
-import Loading from "../components/Loading";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import useUser from "../contexts/UserContext.jsx";
+import Loading from "../components/Loading.jsx";
+import Sidebar from "../components/Sidebar.jsx";
+import Header from "../components/Header.jsx";
 
 const Dashboard = () => {
   const { user, loading, logout } = useUser();

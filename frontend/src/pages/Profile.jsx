@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useUser from "../contexts/UserContext";
+import useUser from "../contexts/UserContext.jsx";
 
 const url = import.meta.env.VITE_API_URL;
 

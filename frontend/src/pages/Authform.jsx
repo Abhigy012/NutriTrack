@@ -1,8 +1,8 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import useUser from "../contexts/UserContext";
-import AuthPage from "./AuthPage";
-import Loading from "../components/Loading";
+import useUser from "../contexts/UserContext.jsx";
+import AuthPage from "./AuthPage.jsx";
+import Loading from "../components/Loading.jsx";
 
 function Authform() {
   const navigate = useNavigate();

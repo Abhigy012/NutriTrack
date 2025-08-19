@@ -1,6 +1,5 @@
 import { React, useState } from "react";
 import { useForm } from "react-hook-form";
-import Loading from "./Loading";
 const url = import.meta.env.VITE_API_URL;
 
 function FoodlogForm({ fetchFoodLog, fetchNutrition }) {

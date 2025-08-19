@@ -1,4 +1,4 @@
-import useUser from "../contexts/UserContext";
+import useUser from "../contexts/UserContext.jsx";
 import { Link } from "react-router-dom";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { TbReportSearch } from "react-icons/tb";

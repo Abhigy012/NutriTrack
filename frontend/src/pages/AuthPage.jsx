@@ -1,7 +1,7 @@
 import { useState } from "react";
 import background from "/images/image1.jpg";
-import Signup from "../components/Signup";
-import Login from "../components/Login";
+import Signup from "../components/Signup.jsx";
+import Login from "../components/Login.jsx";
 
 const AuthPage = () => {
   let [account, setAccount] = useState(false);

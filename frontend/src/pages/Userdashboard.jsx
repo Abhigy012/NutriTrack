@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import useUser from "../contexts/UserContext";
-import Loading from "../components/Loading";
-import DietPie from "../components/DietPie";
-import FoodlogForm from "../components/FoodlogForm";
+import useUser from "../contexts/UserContext.jsx";
+import Loading from "../components/Loading.jsx";
+import DietPie from "../components/DietPie.jsx";
+import FoodlogForm from "../components/FoodlogForm.jsx";
 const url = import.meta.env.VITE_API_URL;
 
 const UserDashboard = () => {

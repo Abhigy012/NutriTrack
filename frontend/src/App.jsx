@@ -1,12 +1,12 @@
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import Authform from "./pages/Authform";
-import UserDashboard from "./pages/UserDashboard";
-import FoodLog from "./components/FoodLog";
-import Reports from "./pages/Reports";
-import Profile from "./pages/Profile";
+import Home from "./pages/Home.jsx";
+import Dashboard from "./pages/Dashboard.jsx";
+import Authform from "./pages/Authform.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
+import FoodLog from "./components/FoodLog.jsx";
+import Reports from "./pages/Reports.jsx";
+import Profile from "./pages/Profile.jsx";
 
 // 👇 Import the UserProvider
 import { UserProvider } from "../src/contexts/UserContext"; // adjust the path if needed
