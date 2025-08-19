@@ -3,7 +3,6 @@ const app = express();
 const dotenv = require("dotenv");
 const authRoutes = require("../backend/routes/authRoutes");
 const foodRoutes = require("../backend/routes/foodRoutes");
-const summaryRoutes = require("../backend/routes/summaryRoutes");
 const reportRoutes = require("../backend/routes/reportRoutes");
 const cookieparser = require("cookie-parser");
 dotenv.config();
