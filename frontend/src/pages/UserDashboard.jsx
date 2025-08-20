@@ -26,17 +26,6 @@ const UserDashboard = () => {
       });
       const data = await res.json();
       setNutrition(data);
-      // Also upsert the daily summary for this date (MVP)
-      try {
-        await fetch(`${url}/summary/daily`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ date: forDate }),
-        });
-      } catch (e) {
-        console.log(e.message);
-      }
     } catch (err) {
       console.error("fetchNutrition error:", err);
     }
