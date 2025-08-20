@@ -30,14 +30,4 @@ app.use("/auth", authRoutes);
 app.use("/food", foodRoutes);
 app.use("/report", reportRoutes);
 
-// ===== Log outbound IP (for Render deployment) =====
-const https = require("https");
-https.get("https://ifconfig.me/ip", (res) => {
-  let data = "";
-  res.on("data", chunk => (data += chunk));
-  res.on("end", () => {
-    console.log("🌐 Render outbound IP:", data.trim());
-  });
-});
-
 module.exports = app;
